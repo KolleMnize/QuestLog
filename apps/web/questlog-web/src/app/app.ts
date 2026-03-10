@@ -1,5 +1,6 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject, OnInit } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
+import { AppStore } from './application/app.store';
 
 @Component({
   selector: 'app-root',
@@ -7,6 +8,13 @@ import { RouterModule, RouterOutlet } from '@angular/router';
   templateUrl: './presentation/app.html',
   styleUrl: './presentation/app.scss'
 })
-export class App {
+
+export class App implements OnInit{
   protected readonly title = signal('questlog-web');
+
+  private appStore = inject(AppStore);
+
+  async ngOnInit() {
+    await this.appStore.init();
+  }
 }
