@@ -1,6 +1,6 @@
 import { Component, signal, inject, OnInit } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
-import { AppStore } from '../application/app.store';
+import { AppStore } from './presentation-services/app.store';
 
 @Component({
   selector: 'app-root',
