@@ -1,1 +1,11 @@
 <p>structure-page.component works!</p>
+<button type="button" class="btn btn-primary" (click)="AddCampaign()">Add newCampaign</button>
+<div >
+        <input type="text" class="form-control-plaintext" placeholder="Campaign name" [(ngModel)]="inputCampaignName">
+</div>
+@for (campaign of campaigns(); track $index)
+{
+<div>
+ <p>{{ campaign.name }}, {{ campaign.id }}</p>
+</div>
+}
