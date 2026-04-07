@@ -8,4 +8,10 @@ export interface GetCampaignsQueryResult {
 export  interface CampaignDto {
     id: string;
     name: string;
+    chapters: CampaignChapterDto[];
+}
+
+export interface CampaignChapterDto {
+    id: string;
+    name: string;
 }
