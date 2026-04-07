@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
-import { Campaign } from "../domain/entities/campaign.entitie";
+import { Campaign } from "../domain/aggregates/campaign.aggregate";
+import { CampaignRepository } from "./repositories/campaign.respsitory";
 
 @Injectable({
     providedIn: 'root',
@@ -7,16 +8,10 @@ import { Campaign } from "../domain/entities/campaign.entitie";
 
 export class CampaignDbContextService {
 
-    _campaigns: Campaign[] = [];
+    public readonly CampaignRepository: CampaignRepository;
+
     constructor() {
-    }
-
-    Add(Campaign: Campaign): void {
-        this._campaigns.push(Campaign);
-    }
-
-    GetCampaigns(): Campaign[] {
-        return this._campaigns;
+        this.CampaignRepository = new CampaignRepository();
     }
 
 }
