@@ -1,4 +1,3 @@
-<p>structure-page.component works!</p>
 <button type="button" class="btn btn-primary" (click)="AddCampaign()">Add newCampaign</button>
 <div >
         <input type="text" class="form-control-plaintext" placeholder="Campaign name" [(ngModel)]="inputCampaignName">
@@ -7,5 +6,11 @@
 {
 <div>
  <p>{{ campaign.name }}, {{ campaign.id }}</p>
+ 
+ <button type="button" class="btn btn-primary" (click)="AddChapterToCampaign(campaign)">Add new Chapter</button>
+ @for (chapter of campaign.chapters; track $index)
+ {
+    <p>{{ chapter.name }}, {{ chapter.id }}</p>
+ }
 </div>
 }

@@ -1,6 +1,7 @@
 import { Component, inject, input, OnInit } from '@angular/core';
 import { AppStore } from '../../presentation-services/app.store';
 import { FormsModule } from '@angular/forms';
+import { CampaignDto } from '../../../backend/campaign-management/application/queries/get-campaigns.query';
 
 @Component({
   selector: 'app-structure-page.component',
@@ -15,8 +16,15 @@ export class StructurePageComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
   async AddCampaign() {
     await this.appStore.addCampaign(this.inputCampaignName);
     this.inputCampaignName = '';
   }
+
+  async AddChapterToCampaign(Campaign: CampaignDto) {
+    await this.appStore.addChapterToCampaign(Campaign.id, 'New Chapter');
+  }
+
+
 }

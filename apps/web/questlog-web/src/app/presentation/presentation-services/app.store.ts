@@ -26,7 +26,12 @@ export const AppStore = signalStore(
                 patchState(store, { status: "initialisierung abgeschlossen" });
             },
             async addCampaign(campaignName: string): Promise<void> {
-                await manageCampaignController.Post({ name: campaignName });
+                await manageCampaignController.PostCreateCampaign({ name: campaignName });
+                const campaigns = await manageCampaignController.Get({});
+                patchState(store, { campaigns: campaigns.Campaigns });
+            },
+            async addChapterToCampaign(campaignId: string, chapterName: string): Promise<void> {
+                await manageCampaignController.PostAddChapterToCampaign({ campaignId, chapterName });
                 const campaigns = await manageCampaignController.Get({});
                 patchState(store, { campaigns: campaigns.Campaigns });
             }
