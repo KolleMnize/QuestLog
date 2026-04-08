@@ -22,4 +22,12 @@ export class Campaign extends Aggregate {
         this._chapters.push(newChapter);
     }
 
+    addSubChapter(parentChapterId: Guid, subChapterName: string)
+    {
+        const parentChapter = this._chapters.find(c => c.Id === parentChapterId);
+        if(!parentChapter)
+            throw new Error("Parent chapter not found");
+        parentChapter.addSubChapter(new CampaignChapter(Guid.newGuid(), subChapterName));
+    }
+
 }
