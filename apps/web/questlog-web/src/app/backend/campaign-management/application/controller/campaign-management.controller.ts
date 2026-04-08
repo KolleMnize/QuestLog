@@ -20,8 +20,8 @@ export class CampaignManagementController {
     public async PostAddChapterToCampaign(command: AddChapterToCampaignCommand): Promise<void> {
         await this._campaignManagementService.HandleAddChapterToCampaignCommand(command);}
 
-    public async PostAddSubChapterToChapter(coommand: AddSubChapterToChapterCommand): Promise<void> {
-        await this._campaignManagementService.HandleAddSubChapterToChapterCommand(coommand);}
+    public async PostAddSubChapterToChapter(command: AddSubChapterToChapterCommand): Promise<void> {
+        await this._campaignManagementService.HandleAddSubChapterToChapterCommand(command);}
 
     public async Get(query: GetCampaignsQuery): Promise<GetCampaignsQueryResult> {
         return await this._campaignManagementService.HandleGetCampaigns(query);}

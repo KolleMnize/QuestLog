@@ -4,7 +4,7 @@ import { Campaign } from "../../domain/aggregates/campaign.aggregate";
 import { CampaignDbContextService } from '../../infrastructure/campaign-db-context.service';
 import { CreateCampaignCommand } from '../commands/create-campaign.command';
 import { GetCampaignsQuery, GetCampaignsQueryResult} from '../queries/get-campaigns.query';
-import { CampaignRepository } from '../../infrastructure/repositories/campaign.respsitory';
+import { CampaignRepository } from '../../infrastructure/repositories/campaign.repository';
 import { AddChapterToCampaignCommand } from '../commands/add-chapter-to-campaign.command';
 import { AddSubChapterToChapterCommand } from '../commands/add-subchapter-to-chapter.command';
 import { CampaignDto } from '../dtos/campaign-dto.interface';
