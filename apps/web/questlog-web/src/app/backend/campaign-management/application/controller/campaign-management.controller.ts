@@ -3,6 +3,7 @@ import {CampaignManagementService} from "../application-services/campaign-manage
 import { CreateCampaignCommand } from '../commands/create-campaign.command';
 import { GetCampaignsQuery, GetCampaignsQueryResult } from '../queries/get-campaigns.query';
 import { AddChapterToCampaignCommand } from '../commands/add-chapter-to-campaign.command';
+import { AddSubChapterToChapterCommand } from '../commands/add-subchapter-to-chapter.command';
 
 @Injectable({
     providedIn: 'root',
@@ -18,6 +19,9 @@ export class CampaignManagementController {
 
     public async PostAddChapterToCampaign(command: AddChapterToCampaignCommand): Promise<void> {
         await this._campaignManagementService.HandleAddChapterToCampaignCommand(command);}
+
+    public async PostAddSubChapterToChapter(coommand: AddSubChapterToChapterCommand): Promise<void> {
+        await this._campaignManagementService.HandleAddSubChapterToChapterCommand(coommand);}
 
     public async Get(query: GetCampaignsQuery): Promise<GetCampaignsQueryResult> {
         return await this._campaignManagementService.HandleGetCampaigns(query);}

@@ -6,6 +6,7 @@ import { CreateCampaignCommand } from '../commands/create-campaign.command';
 import { GetCampaignsQuery, GetCampaignsQueryResult, CampaignDto } from '../queries/get-campaigns.query';
 import { CampaignRepository } from '../../infrastructure/repositories/campaign.respsitory';
 import { AddChapterToCampaignCommand } from '../commands/add-chapter-to-campaign.command';
+import { AddSubChapterToChapterCommand } from '../commands/add-subchapter-to-chapter.command';
 
 @Injectable({
     providedIn: 'root',
@@ -38,6 +39,23 @@ export class CampaignManagementService {
         await this._campaignRepository.saveAsync(campaing);
     }
 
+    async HandleAddSubChapterToChapterCommand(command: AddSubChapterToChapterCommand): Promise<void> {
+        if (!command.campaignId || command.campaignId === '') {
+            throw new Error('Campaign ID cannot be null or empty.');
+        }
+        if (!command.parentChapterId || command.parentChapterId === '') {
+            throw new Error('Parent chapter ID cannot be null or empty.');
+        }
+        if (!command.subChapterName || command.subChapterName === '') {
+            throw new Error('Sub-chapter name cannot be null or empty.');
+        }
+        const campaing = await this._campaignRepository.getCampaignById(new Guid(command.campaignId));
+        if (!campaing) {
+            throw new Error(`Campaign with ID ${command.campaignId} not found.`);
+        }
+        campaing.addSubChapter(new Guid(command.parentChapterId), command.subChapterName);
+        await this._campaignRepository.saveAsync(campaing);
+    }
 
     async HandleGetCampaigns(query: GetCampaignsQuery): Promise<GetCampaignsQueryResult> {
         const campaigns = this._campaignRepository.getCampaigns();
