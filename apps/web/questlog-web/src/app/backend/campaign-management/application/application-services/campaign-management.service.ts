@@ -3,10 +3,13 @@ import { Guid } from "../../../shared-kernel/guid.value-object";
 import { Campaign } from "../../domain/aggregates/campaign.aggregate";
 import { CampaignDbContextService } from '../../infrastructure/campaign-db-context.service';
 import { CreateCampaignCommand } from '../commands/create-campaign.command';
-import { GetCampaignsQuery, GetCampaignsQueryResult, CampaignDto } from '../queries/get-campaigns.query';
+import { GetCampaignsQuery, GetCampaignsQueryResult} from '../queries/get-campaigns.query';
 import { CampaignRepository } from '../../infrastructure/repositories/campaign.respsitory';
 import { AddChapterToCampaignCommand } from '../commands/add-chapter-to-campaign.command';
 import { AddSubChapterToChapterCommand } from '../commands/add-subchapter-to-chapter.command';
+import { CampaignDto } from '../dtos/campaign-dto.interface';
+import { CampaignDtoMapper } from '../dtos/mapper/campaign-dto.mapper';
+
 
 @Injectable({
     providedIn: 'root',
@@ -61,14 +64,7 @@ export class CampaignManagementService {
         const campaigns = this._campaignRepository.getCampaigns();
         const result: CampaignDto[] = [];
         campaigns.forEach(element => {
-            result.push({
-                id: element.Id.Value,
-                name: element.Name,
-                chapters: element.Chapters.map(chapter => ({
-                    id: chapter.Id.Value,
-                    name: chapter.Name
-                }))
-            });
+            result.push(CampaignDtoMapper.CampaignToCampaignDto(element));
         });
         return { Campaigns: result };
     }

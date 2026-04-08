@@ -1,7 +1,7 @@
 import { Component, inject, input, OnInit } from '@angular/core';
 import { AppStore } from '../../presentation-services/app.store';
 import { FormsModule } from '@angular/forms';
-import { CampaignDto } from '../../../backend/campaign-management/application/queries/get-campaigns.query';
+import { CampaignDto } from '../../../backend/campaign-management/application/dtos/campaign-dto.interface';
 
 @Component({
   selector: 'app-structure-page.component',

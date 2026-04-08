@@ -1,7 +1,7 @@
 import { patchState, signalStore, withMethods, withState } from '@ngrx/signals';
 import { CampaignManagementController } from '../../backend/campaign-management/application/controller/campaign-management.controller';
-import { CampaignDto } from '../../backend/campaign-management/application/queries/get-campaigns.query';
 import { inject } from '@angular/core';
+import { CampaignDto } from '../../backend/campaign-management/application/dtos/campaign-dto.interface';
 
 type AppState = {
     status: string;
