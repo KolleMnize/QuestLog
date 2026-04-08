@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Campaign } from "../domain/aggregates/campaign.aggregate";
-import { CampaignRepository } from "./repositories/campaign.respsitory";
+import { CampaignRepository } from "./repositories/campaign.repository";
 
 @Injectable({
     providedIn: 'root',

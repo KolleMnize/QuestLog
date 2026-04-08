@@ -1,3 +1,4 @@
+import { test } from "vitest";
 import { Guid } from "../../../shared-kernel/guid.value-object";
 import { Campaign } from "../../domain/aggregates/campaign.aggregate";
 import { ICampaignRepository } from "../../domain/repositories/campaign-repository.interface";
@@ -6,6 +7,25 @@ export class CampaignRepository implements ICampaignRepository {
     _campaigns: Campaign[] = [];
 
     constructor() {
+
+        const testCampaign = new Campaign(Guid.newGuid(),"Test Campaign");
+        testCampaign.addChapter("Test Chapter1")
+        testCampaign.addChapter("Test Chapter2");
+        testCampaign.addChapter("Test Chapter3");
+
+        const chapter1 = testCampaign.Chapters[0];
+        const chapter3 = testCampaign.Chapters[2];
+
+        testCampaign.addSubChapter(chapter1.Id, "Test SubChapter 1.1");
+        testCampaign.addSubChapter(chapter1.Id, "Test SubChapter 1.2");
+        testCampaign.addSubChapter(chapter3.Id, "Test SubChapter 3.1");
+
+        const chapter11 = chapter1.SubChapters[0];
+
+        testCampaign.addSubChapter(chapter11.Id, "Test SubChapter 1.1.1");
+
+        this._campaigns.push(testCampaign)
+
     }
 
     getCampaignById(id: Guid): Campaign | undefined {
