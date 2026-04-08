@@ -1,11 +1,15 @@
 import { Component, inject, input, OnInit } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
 import { AppStore } from '../../presentation-services/app.store';
 import { FormsModule } from '@angular/forms';
 import { CampaignDto } from '../../../backend/campaign-management/application/dtos/campaign-dto.interface';
+import { CommonModule } from '@angular/common';
+import { CampaignChapterDto } from '../../../backend/campaign-management/application/dtos/campaign-chapter-dto.interface';
 
 @Component({
   selector: 'app-structure-page.component',
-  imports: [FormsModule],
+  standalone: true,
+  imports: [FormsModule, NgTemplateOutlet,CommonModule],
   templateUrl: './structure-page.component.html',
   styleUrl: './structure-page.component.scss',
 })
@@ -24,6 +28,10 @@ export class StructurePageComponent implements OnInit {
 
   async AddChapterToCampaign(Campaign: CampaignDto) {
     await this.appStore.addChapterToCampaign(Campaign.id, 'New Chapter');
+  }
+
+  async AddSubChapterToChapter(Campaign: CampaignDto, ParentChapter: CampaignChapterDto) {
+    await this.appStore.addSubChapterToChapter(Campaign.id, ParentChapter.id, 'New SubChapter');
   }
 
 
