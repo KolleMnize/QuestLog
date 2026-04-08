@@ -4,7 +4,7 @@ import { CampaignChapter } from "../entities/campaign-chapter.entitie";
 
 export class Campaign extends Aggregate {
     private _name: string;
-    private _chapters: CampaignChapter[] = []; 
+    private _chapters: CampaignChapter[] = [];
 
 
     get Name(): string { return this._name; }
@@ -16,18 +16,27 @@ export class Campaign extends Aggregate {
         this._name = name;
     }
 
-    addChapter(chapterName: string)
-    {
+    addChapter(chapterName: string) {
         var newChapter = new CampaignChapter(Guid.newGuid(), chapterName);
         this._chapters.push(newChapter);
     }
 
-    addSubChapter(parentChapterId: Guid, subChapterName: string)
-    {
-        const parentChapter = this._chapters.find(c => c.Id === parentChapterId);
-        if(!parentChapter)
+    addSubChapter(parentChapterId: Guid, subChapterName: string) {
+        const parentChapter = this.finderecursive(this._chapters, parentChapterId);
+        if (!parentChapter)
             throw new Error("Parent chapter not found");
         parentChapter.addSubChapter(new CampaignChapter(Guid.newGuid(), subChapterName));
     }
 
+    private finderecursive(chapters: readonly CampaignChapter[], id: Guid): CampaignChapter | undefined {
+        for (const chapter of chapters) {
+            if (chapter.Id.equals(id))
+                return chapter;
+            else {
+                const result = this.finderecursive(chapter.SubChapters, id);
+                if (result) return result;
+            }
+        }
+        return undefined;
+    }
 }
