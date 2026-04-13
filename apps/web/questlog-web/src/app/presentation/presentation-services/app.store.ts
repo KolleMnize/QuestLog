@@ -41,6 +41,13 @@ export const AppStore = signalStore(
                 await manageCampaignController.PostAddSubChapterToChapter({ campaignId, parentChapterId, subChapterName });
                 const campaigns = await manageCampaignController.Get({});
                 patchState(store, { campaigns: campaigns.Campaigns });
+            },
+            async updateCampaignName(campaignId: string, newName: string): Promise<void> {
+                const result = await manageCampaignController.UpdateCampaignName({ campaignId, newName });                
+                patchState(store, 
+                    { 
+                        campaigns: store.campaigns().map(campaign => campaign.id === result.id ? result : campaign)
+                    });
             }
 
         })

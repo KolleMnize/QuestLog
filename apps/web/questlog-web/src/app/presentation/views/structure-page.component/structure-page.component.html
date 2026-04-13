@@ -1,4 +1,6 @@
-<button type="button" class="btn btn-primary" (click)="AddCampaign()">Add newCampaign</button>
+<button type="button" class="btn btn-primary" (click)="AddCampaign()" [disabled]="editing()">
+  Add newCampaign
+</button>
 <div>
   <input
     type="text"
@@ -9,7 +11,7 @@
 </div>
 <div class="accordion" id="accordionExample">
   @if (campaigns()[0]) {
-    @for (campaign of campaigns(); track campaigns.length) {
+    @for (campaign of campaigns(); track campaign.id) {
       <div class="accordion-item">
         <h2 class="accordion-header" id="headingOne">
           <button
@@ -19,8 +21,22 @@
             [attr.data-bs-target]="'#collapse-' + campaign.id"
             aria-expanded="false"
             [attr.aria-controls]="'collapse-' + campaign.id"
+            [disabled]="editingId()[campaign.id]"
+            [disabled]="editing()"
           >
-            {{ campaign.name }}
+            @if (editingId()[campaign.id]) {
+              <input
+                [id]="'input-' + campaign.id"
+                type="text"
+                class="form-control-plaintext"
+                [value]="campaign.name"
+                (blur)="onBlur($event, campaign)"
+                (keydown.enter)="onEnter($event, campaign)"
+                (keydown.escape)="onEscape($event)"
+              />
+            } @else {
+              {{ campaign.name }}
+            }
           </button>
         </h2>
         <div
@@ -28,19 +44,28 @@
           class="accordion-collapse collapse"
           aria-labelledby="headingOne"
           data-bs-parent="#accordionExample"
-          style=""
         >
-          <div class="accordion-body">
+          <div class="accordion-body" [ariaDisabled]="true">
             <div>
               <div class="btn-group">
                 <button
                   class="btn btn-sm btn-outline-secondary"
                   (click)="AddChapterToCampaign(campaign)"
+                  [disabled]="editing()"
                 >
                   +
                 </button>
-                <button class="btn btn-sm btn-primary">Bearbeiten</button>
-                <button class="btn btn-sm btn-danger">Löschen</button>
+                <input
+                  type="checkbox"
+                  class="btn-check"
+                  [checked]="editingId()[campaign.id]"
+                  id="btncheck{{ campaign.id }}"
+                  (change)="onCheckboxChange($event, campaign.id)"
+                  autocomplete="off"
+                  [disabled]="editingId()[campaign.id]"
+                />
+                <label class="btn btn-primary" for="btncheck{{ campaign.id }}">Bearbeiten</label>
+                <button class="btn btn-sm btn-danger" [disabled]="editing()">Löschen</button>
               </div>
             </div>
             @for (chapter of campaign?.chapters; track $index) {
@@ -56,11 +81,14 @@
                       <button
                         class="btn btn-sm btn-outline-secondary"
                         (click)="AddSubChapterToChapter(campaign, chapter)"
+                        [disabled]="editing()"
                       >
                         +
                       </button>
-                      <button class="btn btn-sm btn-primary">Bearbeiten</button>
-                      <button class="btn btn-sm btn-danger">Löschen</button>
+                      <button class="btn btn-sm btn-primary" [disabled]="editing()">
+                        Bearbeiten
+                      </button>
+                      <button class="btn btn-sm btn-danger" [disabled]="editing()">Löschen</button>
                     </div>
                   </div>
                   @if (chapter.subChapters?.length) {
