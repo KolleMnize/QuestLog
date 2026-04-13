@@ -18,14 +18,14 @@ export class Campaign extends Aggregate {
         this._name = name;
     }
 
-    static create(CampaignId: CampaignId, name:string)
+    static create(campaignId: CampaignId, name:string)
     {
-       return new Campaign(CampaignId, name);
+       return new Campaign(campaignId, name);
     }
 
-    static rehydrate(id: Guid, name:string)
+    static rehydrate(campaignId: CampaignId, name:string)
     {
-        return new Campaign(new CampaignId(id),name)
+        return new Campaign(campaignId,name)
     }
 
     addChapter(chapterName: string) {

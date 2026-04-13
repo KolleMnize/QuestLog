@@ -1,16 +1,17 @@
-import { test } from "vitest";
 import { Guid } from "../../../shared-kernel/guid.value-object";
 import { Campaign } from "../../domain/aggregates/campaign.aggregate";
 import { ICampaignRepository } from "../../domain/repositories/campaign-repository.interface";
+import { CampaignId } from "../../domain/value-objects/campaign-id.value-object";
 
 export class CampaignRepository implements ICampaignRepository {
     _campaigns: Campaign[] = [];
 
 
     constructor() {
-        
-        const newGuid = Guid.newGuid();
-        const testCampaign = Campaign.rehydrate(newGuid,"Test Campaign");
+
+        const campaignId = new CampaignId(Guid.newGuid());
+
+        const testCampaign = Campaign.rehydrate(campaignId, "Test Campaign");
         testCampaign.addChapter("Test Chapter1")
         testCampaign.addChapter("Test Chapter2");
         testCampaign.addChapter("Test Chapter3");
@@ -49,7 +50,7 @@ export class CampaignRepository implements ICampaignRepository {
         if (!this.getCampaignById(Campaign.Id)) {
             this.add(Campaign);
         }
-        else 
+        else
             this.update(Campaign);
 
         return Promise.resolve();
