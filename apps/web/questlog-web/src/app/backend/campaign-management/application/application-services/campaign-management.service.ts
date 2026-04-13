@@ -9,6 +9,7 @@ import { AddChapterToCampaignCommand } from '../commands/add-chapter-to-campaign
 import { AddSubChapterToChapterCommand } from '../commands/add-subchapter-to-chapter.command';
 import { CampaignDto } from '../dtos/campaign-dto.interface';
 import { CampaignDtoMapper } from '../dtos/mapper/campaign-dto.mapper';
+import { UpdateCampaignNameCommand } from '../commands/update-campaign-name.command';
 
 
 @Injectable({
@@ -58,6 +59,19 @@ export class CampaignManagementService {
         }
         campaing.addSubChapter(new Guid(command.parentChapterId), command.subChapterName);
         await this._campaignRepository.saveAsync(campaing);
+    }
+
+    async HandleUpdateCampaignNameCommand(command: UpdateCampaignNameCommand): Promise<CampaignDto> {
+        if (!command.campaignId || command.campaignId === '') {
+            throw new Error('Campaign ID cannot be null or empty.');
+        }
+        const campaign = await this._campaignRepository.getCampaignById(new Guid(command.campaignId));
+        if (!campaign) {
+            throw new Error(`Campaign with ID ${command.campaignId} not found.`);
+        }
+        campaign.updateName(command.newName);
+        await this._campaignRepository.saveAsync(campaign);
+        return CampaignDtoMapper.CampaignToCampaignDto(campaign);
     }
 
     async HandleGetCampaigns(query: GetCampaignsQuery): Promise<GetCampaignsQueryResult> {
