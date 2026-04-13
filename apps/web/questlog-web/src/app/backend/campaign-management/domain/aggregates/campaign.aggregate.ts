@@ -28,6 +28,13 @@ export class Campaign extends Aggregate {
         parentChapter.addSubChapter(new CampaignChapter(Guid.newGuid(), subChapterName));
     }
 
+    updateName(newName: string) {
+        if (!newName || newName === '') {
+            throw new Error('Campaign name cannot be empty.');
+        }
+        this._name = newName;
+    }
+
     private finderecursive(chapters: readonly CampaignChapter[], id: Guid): CampaignChapter | undefined {
         for (const chapter of chapters) {
             if (chapter.Id.equals(id))
