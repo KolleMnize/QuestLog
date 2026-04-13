@@ -67,12 +67,16 @@ export class StructurePageComponent implements OnInit {
   async onEscape(event: Event) {
     this.cancelEdit = true;
     const input = event.target as HTMLInputElement;
+    console.log("erst hier")
     input.blur();
+    console.log("dann hier")
   }
 
   async onBlur(event: FocusEvent, campaign: any) {
+    console.log("danach hier" , this.cancelEdit)
     if (this.cancelEdit) {
       this.cancelEdit = false;
+      this.stopEdit();
       return;
     }
 
