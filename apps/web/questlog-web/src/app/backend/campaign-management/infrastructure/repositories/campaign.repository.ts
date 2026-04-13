@@ -6,9 +6,11 @@ import { ICampaignRepository } from "../../domain/repositories/campaign-reposito
 export class CampaignRepository implements ICampaignRepository {
     _campaigns: Campaign[] = [];
 
-    constructor() {
 
-        const testCampaign = new Campaign(Guid.newGuid(),"Test Campaign");
+    constructor() {
+        
+        const newGuid = Guid.newGuid();
+        const testCampaign = Campaign.rehydrate(newGuid,"Test Campaign");
         testCampaign.addChapter("Test Chapter1")
         testCampaign.addChapter("Test Chapter2");
         testCampaign.addChapter("Test Chapter3");
@@ -43,7 +45,7 @@ export class CampaignRepository implements ICampaignRepository {
         }
     }
 
-    saveAsync(Campaign: Campaign): Promise<void> {
+    saveCampaign(Campaign: Campaign): Promise<void> {
         if (!this.getCampaignById(Campaign.Id)) {
             this.add(Campaign);
         }
@@ -55,6 +57,10 @@ export class CampaignRepository implements ICampaignRepository {
 
     getCampaigns(): Campaign[] {
         return this._campaigns;
+    }
+
+    existsCampaignById(id: Guid): boolean {
+        return this._campaigns.some(campaign => campaign.Id.equals(id));
     }
 
 

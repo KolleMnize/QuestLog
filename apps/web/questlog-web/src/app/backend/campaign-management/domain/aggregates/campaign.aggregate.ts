@@ -1,6 +1,8 @@
 import { Aggregate } from "../../../shared-kernel/aggregate";
 import { Guid } from "../../../shared-kernel/guid.value-object";
 import { CampaignChapter } from "../entities/campaign-chapter.entitie";
+import { IdFactoryService } from "../services/id-factory.service";
+import { CampaignId } from "../value-objects/campaign-id.value-object";
 
 export class Campaign extends Aggregate {
     private _name: string;
@@ -10,10 +12,20 @@ export class Campaign extends Aggregate {
     get Name(): string { return this._name; }
     get Chapters(): readonly CampaignChapter[] { return this._chapters; }
 
-    constructor(id: Guid, name: string) {
+    private constructor(id: CampaignId, name: string) {
         super();
-        this.Id = id;
+        this.Id = id.Value;
         this._name = name;
+    }
+
+    static create(CampaignId: CampaignId, name:string)
+    {
+       return new Campaign(CampaignId, name);
+    }
+
+    static rehydrate(id: Guid, name:string)
+    {
+        return new Campaign(new CampaignId(id),name)
     }
 
     addChapter(chapterName: string) {

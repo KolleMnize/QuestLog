@@ -10,6 +10,7 @@ import { AddSubChapterToChapterCommand } from '../commands/add-subchapter-to-cha
 import { CampaignDto } from '../dtos/campaign-dto.interface';
 import { CampaignDtoMapper } from '../dtos/mapper/campaign-dto.mapper';
 import { UpdateCampaignNameCommand } from '../commands/update-campaign-name.command';
+import { IdFactoryService } from '../../domain/services/id-factory.service';
 
 
 @Injectable({
@@ -18,14 +19,16 @@ import { UpdateCampaignNameCommand } from '../commands/update-campaign-name.comm
 
 export class CampaignManagementService {
     private _campaignDbContextService: CampaignDbContextService = inject(CampaignDbContextService);
+    private _idFactoryService: IdFactoryService = inject(IdFactoryService);
     private _campaignRepository: CampaignRepository = this._campaignDbContextService.CampaignRepository;
 
     async HandleCreateCommand(command: CreateCampaignCommand): Promise<void> {
         if (!command.name || command.name === '') {
             throw new Error('Campaign name cannot be empty.');
         }
-        const newCampaign = new Campaign(Guid.newGuid(), command.name);
-        await this._campaignRepository.saveAsync(newCampaign);
+        const newCampaignId = this._idFactoryService.CreateNewCampaignId();
+        const newCampaign = Campaign.create(newCampaignId, command.name);
+        await this._campaignRepository.saveCampaign(newCampaign);
     }
 
     async HandleAddChapterToCampaignCommand(command: AddChapterToCampaignCommand): Promise<void> {
@@ -40,7 +43,7 @@ export class CampaignManagementService {
             throw new Error(`Campaign with ID ${command.campaignId} not found.`);
         }
         campaing.addChapter(command.chapterName);
-        await this._campaignRepository.saveAsync(campaing);
+        await this._campaignRepository.saveCampaign(campaing);
     }
 
     async HandleAddSubChapterToChapterCommand(command: AddSubChapterToChapterCommand): Promise<void> {
@@ -58,7 +61,7 @@ export class CampaignManagementService {
             throw new Error(`Campaign with ID ${command.campaignId} not found.`);
         }
         campaing.addSubChapter(new Guid(command.parentChapterId), command.subChapterName);
-        await this._campaignRepository.saveAsync(campaing);
+        await this._campaignRepository.saveCampaign(campaing);
     }
 
     async HandleUpdateCampaignNameCommand(command: UpdateCampaignNameCommand): Promise<CampaignDto> {
@@ -70,7 +73,7 @@ export class CampaignManagementService {
             throw new Error(`Campaign with ID ${command.campaignId} not found.`);
         }
         campaign.updateName(command.newName);
-        await this._campaignRepository.saveAsync(campaign);
+        await this._campaignRepository.saveCampaign(campaign);
         return CampaignDtoMapper.CampaignToCampaignDto(campaign);
     }
 
