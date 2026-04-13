@@ -1,7 +1,6 @@
 import { Aggregate } from "../../../shared-kernel/aggregate";
 import { Guid } from "../../../shared-kernel/guid.value-object";
 import { CampaignChapter } from "../entities/campaign-chapter.entitie";
-import { IdFactoryService } from "../services/id-factory.service";
 import { CampaignId } from "../value-objects/campaign-id.value-object";
 
 export class Campaign extends Aggregate {
