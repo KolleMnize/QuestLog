@@ -1,42 +1,54 @@
 import { Aggregate } from "../../../shared-kernel/aggregate";
 import { Guid } from "../../../shared-kernel/guid.value-object";
 import { CampaignChapter } from "../entities/campaign-chapter.entitie";
+import { CampaignChapterId } from "../value-objects/campaign-chapter-id.value-object";
 import { CampaignId } from "../value-objects/campaign-id.value-object";
 
 export class Campaign extends Aggregate {
+    private _id: CampaignId;
     private _name: string;
     private _chapters: CampaignChapter[] = [];
 
-
+    get Id(): CampaignId { return this._id }
     get Name(): string { return this._name; }
     get Chapters(): readonly CampaignChapter[] { return this._chapters; }
 
     private constructor(id: CampaignId, name: string) {
         super();
-        this.Id = id.Value;
+        this._id = id;
         this._name = name;
     }
 
-    static create(campaignId: CampaignId, name:string)
-    {
-       return new Campaign(campaignId, name);
+    static create(campaignId: CampaignId, name: string) {
+        return new Campaign(campaignId, name);
     }
 
-    static rehydrate(campaignId: CampaignId, name:string)
-    {
-        return new Campaign(campaignId,name)
+    static rehydrate(campaignId: CampaignId, name: string) {
+        return new Campaign(campaignId, name)
     }
 
-    addChapter(chapterName: string) {
-        var newChapter = new CampaignChapter(Guid.newGuid(), chapterName);
+    addChapter(chapterId: CampaignChapterId, chapterName: string) {
+        var newChapter = CampaignChapter.create(chapterId, chapterName);
         this._chapters.push(newChapter);
     }
 
-    addSubChapter(parentChapterId: Guid, subChapterName: string) {
-        const parentChapter = this.finderecursive(this._chapters, parentChapterId);
+    addSubChapter(parentChapterId: CampaignChapterId, subChapterId: CampaignChapterId, subChapterName: string) {
+        var parentChapter: CampaignChapter | undefined;
+
+        for (const chapter of this.Chapters) {
+            if (chapter.Id.equals(parentChapterId)) {
+                parentChapter = chapter;
+                break;
+            }
+            const searchresult = chapter.findSubChapterById(parentChapterId);
+            if (searchresult) {
+                parentChapter = searchresult;
+                break;
+            }
+        }
         if (!parentChapter)
             throw new Error("Parent chapter not found");
-        parentChapter.addSubChapter(new CampaignChapter(Guid.newGuid(), subChapterName));
+        parentChapter.addSubChapter(CampaignChapter.create(subChapterId, subChapterName));
     }
 
     updateName(newName: string) {
@@ -46,15 +58,5 @@ export class Campaign extends Aggregate {
         this._name = newName;
     }
 
-    private finderecursive(chapters: readonly CampaignChapter[], id: Guid): CampaignChapter | undefined {
-        for (const chapter of chapters) {
-            if (chapter.Id.equals(id))
-                return chapter;
-            else {
-                const result = this.finderecursive(chapter.SubChapters, id);
-                if (result) return result;
-            }
-        }
-        return undefined;
-    }
+
 }

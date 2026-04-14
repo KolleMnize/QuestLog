@@ -6,4 +6,10 @@ export class CampaignId {
     constructor(value: Guid) {
         this.Value = value;
     }
+
+    equals(other: CampaignId): boolean {
+        {
+            return other.Value.equals(this.Value);
+        }
+    }
 }
