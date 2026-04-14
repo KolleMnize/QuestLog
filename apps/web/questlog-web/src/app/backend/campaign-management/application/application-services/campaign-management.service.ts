@@ -38,29 +38,28 @@ export class CampaignManagementService {
         if (!command.chapterName || command.chapterName === '') {
             throw new Error('Chapter name cannot be  null or empty.');
         }
-        const campaing = await this._campaignRepository.getCampaignById(new Guid(command.campaignId));
+        const campaignId = this._idFactoryService.CreateCampaignIdFromGuid(new Guid(command.campaignId))
+        const campaing = await this._campaignRepository.getCampaignById(campaignId);
         if (!campaing) {
             throw new Error(`Campaign with ID ${command.campaignId} not found.`);
         }
-        campaing.addChapter(command.chapterName);
+
+        campaing.addChapter(this._idFactoryService.CreateNewCampaignChapterId(),command.chapterName);
         await this._campaignRepository.saveCampaign(campaing);
     }
 
     async HandleAddSubChapterToChapterCommand(command: AddSubChapterToChapterCommand): Promise<void> {
-        if (!command.campaignId || command.campaignId === '') {
-            throw new Error('Campaign ID cannot be null or empty.');
-        }
         if (!command.parentChapterId || command.parentChapterId === '') {
             throw new Error('Parent chapter ID cannot be null or empty.');
         }
         if (!command.subChapterName || command.subChapterName === '') {
             throw new Error('Sub-chapter name cannot be null or empty.');
         }
-        const campaing = await this._campaignRepository.getCampaignById(new Guid(command.campaignId));
-        if (!campaing) {
-            throw new Error(`Campaign with ID ${command.campaignId} not found.`);
-        }
-        campaing.addSubChapter(new Guid(command.parentChapterId), command.subChapterName);
+
+        const parentChapterId = this._idFactoryService.CreateCampaignChapterIdFromGuid(new Guid(command.parentChapterId))
+        const campaing = await this._campaignRepository.getCampaignByChapterId(parentChapterId);
+
+        campaing.addSubChapter(parentChapterId, this._idFactoryService.CreateNewCampaignChapterId(),command.subChapterName);
         await this._campaignRepository.saveCampaign(campaing);
     }
 
@@ -68,7 +67,8 @@ export class CampaignManagementService {
         if (!command.campaignId || command.campaignId === '') {
             throw new Error('Campaign ID cannot be null or empty.');
         }
-        const campaign = await this._campaignRepository.getCampaignById(new Guid(command.campaignId));
+        const campaignId = this._idFactoryService.CreateCampaignIdFromGuid(new Guid(command.campaignId))
+        const campaign = await this._campaignRepository.getCampaignById(campaignId);
         if (!campaign) {
             throw new Error(`Campaign with ID ${command.campaignId} not found.`);
         }

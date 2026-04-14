@@ -38,7 +38,7 @@ export const AppStore = signalStore(
                 patchState(store, { campaigns: campaigns.Campaigns });
             },
             async addSubChapterToChapter(campaignId: string, parentChapterId: string, subChapterName: string): Promise<void> {
-                await manageCampaignController.PostAddSubChapterToChapter({ campaignId, parentChapterId, subChapterName });
+                await manageCampaignController.PostAddSubChapterToChapter({ parentChapterId, subChapterName });
                 const campaigns = await manageCampaignController.Get({});
                 patchState(store, { campaigns: campaigns.Campaigns });
             },

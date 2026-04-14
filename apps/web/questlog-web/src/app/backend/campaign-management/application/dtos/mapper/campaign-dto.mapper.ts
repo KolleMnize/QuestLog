@@ -7,7 +7,7 @@ export class CampaignDtoMapper {
 
     public static CampaignToCampaignDto(champaign: Campaign): CampaignDto {
         return {
-            id: champaign.Id.Value,
+            id: champaign.Id.Value.Value,
             name: champaign.Name,
             chapters: champaign.Chapters.map(chapter => this.mapCampaignChapterToDto(chapter))
         }
@@ -15,7 +15,7 @@ export class CampaignDtoMapper {
 
     private static mapCampaignChapterToDto(chapter: CampaignChapter): CampaignChapterDto {
         return {
-            id: chapter.Id.Value,
+            id: chapter.Id.Value.Value,
             name: chapter.Name,
             subChapters: chapter.SubChapters.map((subChapter: CampaignChapter) => this.mapCampaignChapterToDto(subChapter))
         };
